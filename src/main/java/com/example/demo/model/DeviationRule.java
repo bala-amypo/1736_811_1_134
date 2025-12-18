@@ -16,31 +16,32 @@ public class DeviationRule{
     private Integer thresholdDeviation;
     private boolean active;
 
-    public DeviationRule(Long id,String surgeryType,String symptomParameter,Integer thresholdDeviation,boolean ac){
+    public DeviationRule(Long id,String surgeryType,String symptomParameter,Integer thresholdDeviation,boolean active){
+
         //this.id=id;
-        this.name=name;
-        this.email=email;
-        this.cgpa=cgpa;
+        this.surgeryType=surgeryType;
+        this.symptomParameter=symptomParameter;
+        this.thresholdDeviation=thresholdDeviation;
     }
-    public StudentEntity(){
+    public DeviationRule(){
 
     }
-    public void setName(String name){
-        this.name=name;
+    public void setSurgeryType(String surgeryType){
+        this.surgeryType=surgeryType;
     }
-    public String getName(){
-        return this.name;
+    public String getSurgeryType(){
+        return this.SurgeryType;
     }
-    public void setEmail(){
-        this.email=email;
+    public void setSymptomParameter(){
+        this.symptomParameter=symptomParameter;
     }
-    public String getEmail(){
-        return this.email;
+    public String getSymptomParameter(){
+        return this.symptomParameter;
     }
-    public void setCgpa(){
-        this.cgpa=cgpa;
+    public void setThresholdDeviation(){
+        this.thresholdDeviation=thresholdDeviation;
     }
-    public float getcgpa(){
-        return this.cgpa;   
+    public Integer getThresholdDeviation(){
+        return this.thresholdDeviation;   
     }
 }

@@ -24,22 +24,22 @@ public class Appuser{
     public AppUser(){
 
     }
-    public void set(String name){
-        this.name=name;
-    }
-    public String getName(){
-        return this.name;
-    }
-    public void setEmail(){
+    public void setEmail(String email){
         this.email=email;
     }
-    public String getEmail(){
+    public String getemail(){
         return this.email;
     }
-    public void setCgpa(){
-        this.cgpa=cgpa;
+    public void setPassword(String password){
+        this.password=password;
     }
-    public float getcgpa(){
-        return this.cgpa;   
+    public String getpassword(){
+        return this.password;
+    }
+    public void setRole(String role){
+        this.role=role;
+    }
+    public String getrole(){
+        return this.role;   
     }
 }

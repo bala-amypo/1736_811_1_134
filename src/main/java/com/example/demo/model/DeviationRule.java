@@ -22,6 +22,8 @@ public class DeviationRule{
         this.surgeryType=surgeryType;
         this.symptomParameter=symptomParameter;
         this.thresholdDeviation=thresholdDeviation;
+        this.active=active;
+        
     }
     public DeviationRule(){
 
@@ -44,4 +46,11 @@ public class DeviationRule{
     public Integer getThresholdDeviation(){
         return this.thresholdDeviation;   
     }
+    public void setActive(){
+        this.active=active;
+    }
+    public boolean getActive(){
+        return this.active=active;   
+    }
+
 }

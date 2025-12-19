@@ -1,16 +1,16 @@
-package com.example.demo.Service.impl;
+package com.example.demo.service.impl;
 
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.RegisterRequest;
-import com.example.demo.Service.AuthService;
+import com.example.demo.service.AuthService;
 
 @Service
-public class AuthServiceimpl implements AuthService {
+public class AuthServiceImpl implements AuthService {
 
-    public AuthServiceimpl() {
+    public AuthServiceImpl() {
     }
 
     @Override

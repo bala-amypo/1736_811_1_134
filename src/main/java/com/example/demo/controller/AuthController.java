@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.RegisterRequest;
-import com.example.demo.Service.AuthService;
+import com.example.demo.service.AuthService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 

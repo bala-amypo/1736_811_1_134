@@ -1,21 +1,22 @@
 package com.example.demo.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.time.LocalDate;
+import java.util.List;
 
 import com.example.demo.model.DailySymptomLog;
 import com.example.demo.repository.DailySymptomLogRepository;
 import com.example.demo.service.DailySymptomLogService;
 import com.example.demo.exception.ResourceNotFoundException;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @Service
 public class DailySymptomLogServiceImpl implements DailySymptomLogService {
 
-    @Autowired
-    DailySymptomLogRepository repo;
+    private final DailySymptomLogRepository repo;
+
+    public DailySymptomLogServiceImpl(DailySymptomLogRepository repo) {
+        this.repo = repo;
+    }
 
     @Override
     public DailySymptomLog recordLog(DailySymptomLog log) {
@@ -27,12 +28,17 @@ public class DailySymptomLogServiceImpl implements DailySymptomLogService {
 
     @Override
     public List<DailySymptomLog> getLogsByPatient(Long patientid) {
-        return repo.findByPatientid(patientid);
+        return repo.findByPatient_Id(patientid);
     }
 
     @Override
     public DailySymptomLog getLogById(Long id) {
         return repo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Log not found"));
+    }
+
+    @Override
+    public List<DailySymptomLog> getAllLogs() {
+        return repo.findAll();
     }
 }

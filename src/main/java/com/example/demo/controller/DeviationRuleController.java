@@ -1,34 +1,48 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.DeviationRule;
-import com.example.demo.service.DeviationRuleService;
-import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import com.example.demo.service.DeviationRuleService;
+import com.example.demo.model.DeviationRule;
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rule")
+@RequestMapping("/api/deviation-rules")
 public class DeviationRuleController {
 
-    private final DeviationRuleService service;
+    @Autowired
+    private DeviationRuleService service;
 
-    public DeviationRuleController(DeviationRuleService service) {
-        this.service = service;
-    }
-
-    @PostMapping("/post")
+    
+    @PostMapping
     public DeviationRule createRule(@Valid @RequestBody DeviationRule rule) {
         return service.createRule(rule);
     }
 
-    @GetMapping("/get/{surgeryType}")
-    public List<DeviationRule> getRules(@PathVariable String surgeryType) {
-        return service.getRulesBySurgery(surgeryType);
+    
+    @PutMapping("/{id}")
+    public DeviationRule updateRule(
+            @PathVariable Long id,
+            @Valid @RequestBody DeviationRule rule) {
+        return service.updateRule(id, rule);
     }
 
-    @GetMapping("/get")
+    
+    @GetMapping
     public List<DeviationRule> getAllRules() {
         return service.getAllRules();
+    }
+
+    
+    @GetMapping("/active")
+    public List<DeviationRule> getActiveRules() {
+        return service.getActiveRules();
+    }
+
+    
+    @GetMapping("/{id}")
+    public DeviationRule getRuleById(@PathVariable Long id) {
+        return service.getRuleById(id);
     }
 }

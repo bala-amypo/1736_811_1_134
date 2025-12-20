@@ -12,4 +12,6 @@ public interface PatientProfileService {
     List<PatientProfile> getAllPatients();
 
     void updatePatientStatus(Long id, boolean active);
+
+    PatientProfile getByPatientId(String patientid);
 }

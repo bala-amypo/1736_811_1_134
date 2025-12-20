@@ -1,24 +1,28 @@
 package com.example.demo.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
-
 import com.example.demo.model.ClinicalAlert;
 import com.example.demo.repository.ClinicalAlertRepository;
 import com.example.demo.service.ClinicalAlertService;
 import com.example.demo.exception.ResourceNotFoundException;
+import java.util.List;
 
 @Service
 public class ClinicalAlertServiceImpl implements ClinicalAlertService {
 
-    private final ClinicalAlertRepository repo;
-
-    public ClinicalAlertServiceImpl(ClinicalAlertRepository repo) {
-        this.repo = repo;
-    }
+    @Autowired
+    private ClinicalAlertRepository repo;
 
     @Override
     public ClinicalAlert createAlert(ClinicalAlert alert) {
+        return repo.save(alert);
+    }
+
+    @Override
+    public ClinicalAlert resolveAlert(Long id) {
+        ClinicalAlert alert = getAlertById(id);
+        alert.setResolved(true);
         return repo.save(alert);
     }
 
@@ -28,11 +32,9 @@ public class ClinicalAlertServiceImpl implements ClinicalAlertService {
     }
 
     @Override
-    public ClinicalAlert resolveAlert(Long alertid) {
-        ClinicalAlert alert = repo.findById(alertid)
+    public ClinicalAlert getAlertById(Long id) {
+        return repo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Alert not found"));
-        alert.setResolved(true);
-        return repo.save(alert);
     }
 
     @Override

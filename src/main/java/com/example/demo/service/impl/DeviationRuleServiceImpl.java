@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.model.DeviationRule;
 import com.example.demo.repository.DeviationRuleRepository;
 import com.example.demo.service.DeviationRuleService;
+import com.example.demo.exception.ResourceNotFoundException;
 
 import java.util.List;
 
@@ -13,23 +14,39 @@ import java.util.List;
 public class DeviationRuleServiceImpl implements DeviationRuleService {
 
     @Autowired
-    DeviationRuleRepository repo;
+    private DeviationRuleRepository repo;
 
     @Override
     public DeviationRule createRule(DeviationRule rule) {
-        if (rule.getThresholdDeviation() <= 0) {
-            throw new IllegalArgumentException("Threshold must be positive");
-        }
         return repo.save(rule);
     }
 
     @Override
-    public List<DeviationRule> getRulesBySurgery(String surgeryType) {
-        return repo.findBySurgeryType(surgeryType);
+    public DeviationRule updateRule(Long id, DeviationRule rule) {
+        DeviationRule existing = repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
+        rule.setId(existing.getId());
+        return repo.save(rule);
     }
 
     @Override
     public List<DeviationRule> getAllRules() {
         return repo.findAll();
+    }
+
+    @Override
+    public List<DeviationRule> getActiveRules() {
+        return repo.findAll(); 
+    }
+
+    @Override
+    public DeviationRule getRuleById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
+    }
+
+    @Override
+    public List<DeviationRule> getRulesBySurgery(String surgeryType) {
+        return repo.findBySurgeryType(surgeryType);
     }
 }

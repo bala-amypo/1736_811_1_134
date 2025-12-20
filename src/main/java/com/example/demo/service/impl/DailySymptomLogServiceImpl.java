@@ -1,28 +1,28 @@
 package com.example.demo.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.time.LocalDate;
-import java.util.List;
-
 import com.example.demo.model.DailySymptomLog;
 import com.example.demo.repository.DailySymptomLogRepository;
 import com.example.demo.service.DailySymptomLogService;
 import com.example.demo.exception.ResourceNotFoundException;
+import java.util.List;
 
 @Service
 public class DailySymptomLogServiceImpl implements DailySymptomLogService {
 
-    private final DailySymptomLogRepository repo;
-
-    public DailySymptomLogServiceImpl(DailySymptomLogRepository repo) {
-        this.repo = repo;
-    }
+    @Autowired
+    private DailySymptomLogRepository repo;
 
     @Override
     public DailySymptomLog recordLog(DailySymptomLog log) {
-        if (log.getLogDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("future date");
-        }
+        return repo.save(log);
+    }
+
+    @Override
+    public DailySymptomLog updateLog(Long id, DailySymptomLog log) {
+        DailySymptomLog existing = getLogById(id);
+        log.setId(existing.getId());
         return repo.save(log);
     }
 

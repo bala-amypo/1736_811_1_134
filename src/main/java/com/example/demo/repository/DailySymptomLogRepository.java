@@ -8,5 +8,5 @@ import java.util.List;
 @Repository
 public interface DailySymptomLogRepository extends JpaRepository<DailySymptomLog, Long> {
 
-    List<DailySymptomLog> findByPatientid(Long patientid);
+    List<DailySymptomLog> findByPatient_Id(Long patientid);
 }

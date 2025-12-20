@@ -1,30 +1,30 @@
 package com.example.demo.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
-import com.example.demo.model.ClinicalAlert;
+import com.example.demo.entity.ClinicalAlert;
 import com.example.demo.repository.ClinicalAlertRepository;
 import com.example.demo.service.ClinicalAlertService;
 import com.example.demo.exception.ResourceNotFoundException;
 
-import java.util.List;
-
 @Service
 public class ClinicalAlertServiceImpl implements ClinicalAlertService {
 
-    @Autowired
-    ClinicalAlertRepository repo;
+    private final ClinicalAlertRepository repo;
+
+    public ClinicalAlertServiceImpl(ClinicalAlertRepository repo) {
+        this.repo = repo;
+    }
 
     @Override
     public ClinicalAlert createAlert(ClinicalAlert alert) {
-        alert.setResolved(false);
         return repo.save(alert);
     }
 
     @Override
     public List<ClinicalAlert> getAlertsByPatient(Long patientid) {
-        return repo.findByPatientid(patientid);
+        return repo.findByPatient_Id(patientid);
     }
 
     @Override

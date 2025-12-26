@@ -18,33 +18,31 @@ public class DeviationRuleServiceImpl implements DeviationRuleService {
     }
 
     @Override
-    public List<DeviationRule> getAllRules() {
-        return repository.findAll();
-    }
-
-    @Override
     public List<DeviationRule> getActiveRules() {
         return repository.findAll()
                 .stream()
-                .filter(rule -> Boolean.TRUE.equals(rule.getActive()))
+                .filter(r -> Boolean.TRUE.equals(r.getActive()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public DeviationRule getRuleById(Long id) {
-        return repository.findById(id).orElse(null);
-    }
-
-    @Override
-    public DeviationRule saveRule(DeviationRule rule) {
-        if (rule.getThresholdDeviation() == null || rule.getThresholdDeviation() <= 0) {
+    public DeviationRule createRule(DeviationRule rule) {
+        if (rule.getThresholdDeviation() <= 0) {
             throw new IllegalArgumentException("Threshold must be positive");
         }
         return repository.save(rule);
     }
 
     @Override
-    public void deleteRule(Long id) {
-        repository.deleteById(id);
+    public DeviationRule updateRule(Long id, DeviationRule rule) {
+        DeviationRule existing = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rule not found"));
+
+        existing.setSurgeryType(rule.getSurgeryType());
+        existing.setSymptomParameter(rule.getSymptomParameter());
+        existing.setThresholdDeviation(rule.getThresholdDeviation());
+        existing.setActive(rule.getActive());
+
+        return repository.save(existing);
     }
 }

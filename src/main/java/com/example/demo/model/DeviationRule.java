@@ -1,22 +1,33 @@
 package com.example.demo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class DeviationRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Type of surgery this rule applies to
     private String surgeryType;
 
-    private double thresholdDeviation; // allowed deviation percentage
+    // Clinical symptom this rule is monitoring
+    private String symptomParameter;
 
-    private String severity;           // LOW / MEDIUM / HIGH
+    // Threshold deviation; must be positive
+    @Positive(message = "Threshold must be positive")
+    private Integer thresholdDeviation;
+
+    // Whether this rule is currently active
+    private Boolean active;
 }

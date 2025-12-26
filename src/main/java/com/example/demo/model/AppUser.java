@@ -1,14 +1,20 @@
 package com.example.demo.model;
 
-import lombok.Builder;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Data;
 
+@Entity
 @Data
-@Builder
 public class AppUser {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String email;
     private String password;
-    private String fullName;
-    private String role; // test uses role as String, like UserRole.CLINICIAN
+    private String role;
 }

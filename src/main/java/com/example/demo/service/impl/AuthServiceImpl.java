@@ -1,32 +1,57 @@
 package com.example.demo.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.dto.*;
+import com.example.demo.model.*;
+import com.example.demo.repository.AppUserRepository;
+import com.example.demo.security.JwtTokenProvider;
+import com.example.demo.service.AuthService;
+import org.springframework.security.authentication.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.model.AppUser;
-import com.example.demo.repository.AppUserRepository;
-import com.example.demo.service.AuthService;
+import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    private AppUserRepository repo;
+    private final AppUserRepository appUserRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    @Override
-    public void register(AppUser user) {
-        if (repo.findByEmail(user.getEmail()) != null) {
-            throw new RuntimeException("Email already exists");
-        }
-        repo.save(user);
+    public AuthServiceImpl(AppUserRepository appUserRepository,
+                           PasswordEncoder passwordEncoder,
+                           AuthenticationManager authenticationManager,
+                           JwtTokenProvider jwtTokenProvider) {
+        this.appUserRepository = appUserRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
-    public AppUser login(AppUser user) {
-        AppUser existing = repo.findByEmail(user.getEmail());
-        if (existing == null) {
-            throw new RuntimeException("User not found");
-        }
-        return existing;
+    public AuthResponse register(RegisterRequest request) {
+        AppUser user = AppUser.builder()
+                .email(request.getEmail())
+                .fullName(request.getFullName())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(UserRole.CLINICIAN)
+                .build();
+        appUserRepository.save(user);
+        String token = jwtTokenProvider.generateToken(user);
+        return new AuthResponse(user.getEmail(), token);
+    }
+
+    @Override
+    public AuthResponse login(AuthRequest request) {
+        Optional<AppUser> userOpt = appUserRepository.findByEmail(request.getEmail());
+        if(userOpt.isEmpty()) throw new IllegalArgumentException("User not found");
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+
+        String token = jwtTokenProvider.generateToken(userOpt.get());
+        return new AuthResponse(request.getEmail(), token);
     }
 }

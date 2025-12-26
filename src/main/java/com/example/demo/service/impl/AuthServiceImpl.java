@@ -1,11 +1,16 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.*;
-import com.example.demo.model.*;
+import com.example.demo.dto.AuthRequest;
+import com.example.demo.dto.AuthResponse;
+import com.example.demo.dto.RegisterRequest;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.model.AppUser;
+import com.example.demo.model.UserRole;
 import com.example.demo.repository.AppUserRepository;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.AuthService;
-import org.springframework.security.authentication.*;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,23 +40,24 @@ public class AuthServiceImpl implements AuthService {
                 .email(request.getEmail())
                 .fullName(request.getFullName())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(UserRole.CLINICIAN)
+                .role(UserRole.CLINICIAN) // default role for testing
                 .build();
-        appUserRepository.save(user);
-        String token = jwtTokenProvider.generateToken(user);
-        return new AuthResponse(user.getEmail(), token);
+        AppUser saved = appUserRepository.save(user);
+        String token = jwtTokenProvider.generateToken(saved);
+        return new AuthResponse(saved.getEmail(), token);
     }
 
     @Override
     public AuthResponse login(AuthRequest request) {
-        Optional<AppUser> userOpt = appUserRepository.findByEmail(request.getEmail());
-        if(userOpt.isEmpty()) throw new IllegalArgumentException("User not found");
-
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
-
-        String token = jwtTokenProvider.generateToken(userOpt.get());
-        return new AuthResponse(request.getEmail(), token);
+        Optional<AppUser> optionalUser = appUserRepository.findByEmail(request.getEmail());
+        if (optionalUser.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
+        }
+        AppUser user = optionalUser.get();
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
+        authenticationManager.authenticate(authToken);
+        String token = jwtTokenProvider.generateToken(user);
+        return new AuthResponse(user.getEmail(), token);
     }
 }

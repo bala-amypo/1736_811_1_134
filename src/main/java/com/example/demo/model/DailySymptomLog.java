@@ -1,20 +1,28 @@
 package com.example.demo.model;
 
-import lombok.Builder;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
+@Entity
 @Data
-@Builder
 public class DailySymptomLog {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long patientId; // test uses patientId (not PatientProfile)
+
+    private Long patientId;
+
     private LocalDate logDate;
-    private Integer painLevel;
-    private Integer mobilityLevel;
-    private Integer fatigueLevel;
-    private String additionalNotes; // test uses additionalNotes
-    private LocalDateTime submittedAt;
+
+    private int painLevel;        // 0–10
+    private int mobilityLevel;    // 0–10
+    private int fatigueLevel;     // 0–10
+
+    private String notes;         // symptoms / comments
 }

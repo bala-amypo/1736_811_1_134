@@ -1,16 +1,22 @@
 package com.example.demo.model;
 
-import lombok.Builder;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Data;
 
+@Entity
 @Data
-@Builder
 public class DeviationRule {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String ruleCode; // test references this
-    private String parameter;
-    private Integer threshold;
-    private String severity;
-    @Builder.Default
-    private Boolean active = true; // default true
+
+    private String surgeryType;
+
+    private double thresholdDeviation; // allowed deviation percentage
+
+    private String severity;           // LOW / MEDIUM / HIGH
 }

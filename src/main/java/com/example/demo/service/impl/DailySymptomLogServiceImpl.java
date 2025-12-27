@@ -49,7 +49,7 @@ public class DailySymptomLogServiceImpl implements DailySymptomLogService {
 
         DailySymptomLog saved = dailySymptomLogRepository.save(log);
 
-        // Conceptual alerting: if pain level is higher than expected by threshold, create alert
+        
         List<RecoveryCurveProfile> curve = recoveryCurveService.getCurveForSurgery(patient.getSurgeryType());
         curve.stream()
                 .filter(c -> c.getDayNumber() != null && log.getLogDate() != null)
@@ -58,7 +58,7 @@ public class DailySymptomLogServiceImpl implements DailySymptomLogService {
                 .ifPresent(c -> {
                     if (log.getPainLevel() != null && c.getExpectedPainLevel() != null) {
                         int delta = log.getPainLevel() - c.getExpectedPainLevel();
-                        // any positive delta triggers an alert conceptually
+                        
                         if (delta > 0) {
                             ClinicalAlertRecord alert = ClinicalAlertRecord.builder()
                                     .patientId(log.getPatientId())
@@ -79,7 +79,7 @@ public class DailySymptomLogServiceImpl implements DailySymptomLogService {
     public DailySymptomLog updateSymptomLog(Long id, DailySymptomLog updated) {
         DailySymptomLog existing = dailySymptomLogRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Daily log not found"));
-        // preserve patient id
+        
         updated.setId(existing.getId());
         updated.setPatientId(existing.getPatientId());
         return dailySymptomLogRepository.save(updated);

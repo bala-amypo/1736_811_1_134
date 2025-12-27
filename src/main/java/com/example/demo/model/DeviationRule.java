@@ -28,5 +28,5 @@ public class DeviationRule {
     @Builder.Default
     private Boolean active = true;
 
-    private String surgeryType; // for surgery specific rules
+    private String surgeryType; 
 }

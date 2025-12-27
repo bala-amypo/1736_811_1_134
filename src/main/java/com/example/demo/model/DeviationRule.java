@@ -19,7 +19,7 @@ public class DeviationRule {
     @Column(nullable = false, unique = true)
     private String ruleCode;
 
-    private String parameter; // PAIN, MOBILITY, etc
+    private String parameter; 
 
     private Integer threshold;
 

@@ -53,7 +53,7 @@ public class DailySymptomLogServiceImpl implements DailySymptomLogService {
         List<RecoveryCurveProfile> curve = recoveryCurveService.getCurveForSurgery(patient.getSurgeryType());
         curve.stream()
                 .filter(c -> c.getDayNumber() != null && log.getLogDate() != null)
-                .filter(c -> c.getDayNumber().equals(log.getLogDate().getDayOfMonth())) // simplistic mapping for concept
+                .filter(c -> c.getDayNumber().equals(log.getLogDate().getDayOfMonth())) 
                 .findFirst()
                 .ifPresent(c -> {
                     if (log.getPainLevel() != null && c.getExpectedPainLevel() != null) {
